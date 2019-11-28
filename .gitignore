@@ -4,3 +4,6 @@ proxy_temp/
 fastcgi_temp/
 client_body_temp/
 resty_modules/
+logs/access.log
+logs/error.log
+logs/nginx.pid

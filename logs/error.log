@@ -1,4 +1,0 @@
-2019/11/28 15:00:15 [emerg] 18584#18584: unexpected "}" in /home/pimg/workspace/openresty-workspace/oauth-proxy/conf/nginx.conf:12
-2019/11/28 15:01:13 [notice] 18623#18623: signal process started
-2019/11/28 15:08:34 [notice] 18766#18766: signal process started
-2019/11/28 15:09:20 [notice] 18807#18807: signal process started

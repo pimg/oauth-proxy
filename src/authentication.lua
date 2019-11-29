@@ -10,9 +10,9 @@ if not cache then
 end
 
 local function get_token()
-  local token_url = os.getenv("AUTHORIZATION_URL")
-  local client_id = os.getenv("CLIENT_ID")
-  local client_secret = os.getenv("CLIENT_SECRET")
+  local token_url = ngx.var.authorization_url
+  local client_id = ngx.var.client_id
+  local client_secret = ngx.var.client_secret
   local request_body = string.format( "grant_type=client_credentials&scope=&client_id=%s&client_secret=%s", client_id, client_secret )
   local res, err = httpc:request_uri(token_url, {
         method = "POST",
@@ -47,7 +47,7 @@ function _M.authenticate()
     ngx.log(ngx.NOTICE, "expires_in " .. expiration)
     cache:set("token", access_token, expiration)
   end
-
+  ngx.req.set_header("Authorization", "Bearer " .. access_token)
   return access_token
 end
 

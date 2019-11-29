@@ -10,18 +10,22 @@ if not cache then
 end
 
 local function get_token()
-  local res, err = httpc:request_uri("http://127.0.0.1:9999/token", {
+  local token_url = os.getenv("AUTHORIZATION_URL")
+  local client_id = os.getenv("CLIENT_ID")
+  local client_secret = os.getenv("CLIENT_SECRET")
+  local request_body = string.format( "grant_type=client_credentials&scope=&client_id=%s&client_secret=%s", client_id, client_secret )
+  local res, err = httpc:request_uri(token_url, {
         method = "POST",
-        body = "grant_type=client_credentials&scope=&client_id=569fcd05&client_secret=237b44d4a646f36410ca4313e8e8a877",
+        body = request_body,
         headers = {
           ["Content-Type"] = "application/x-www-form-urlencoded",
         }
       })
 
-      if not res then
-        ngx.log(ngx.ERR, "failed to request: ".. err)
-        return
-      end
+  if res == nil then
+    ngx.log(ngx.ERR, "failed to request: ".. err)
+    return
+  end
 
   local token_json = res.body
   local token_tbl = cjson.decode(token_json)
@@ -33,7 +37,11 @@ function _M.authenticate()
 
   local access_token = cache:get("token")
   if access_token == nil then
-    token = get_token()
+    local token = get_token()
+    if not token then
+      ngx.status = 500
+      return "token could not be retrieved"
+    end
     access_token = token.access_token
     expiration = token.expires_in
     ngx.log(ngx.NOTICE, "expires_in " .. expiration)

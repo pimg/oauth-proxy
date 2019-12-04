@@ -43,7 +43,7 @@ function _M.authenticate()
       return "token could not be retrieved"
     end
     access_token = token.access_token
-    expiration = token.expires_in
+    local expiration = token.expires_in
     ngx.log(ngx.NOTICE, "expires_in " .. expiration)
     cache:set("token", access_token, expiration)
   end
